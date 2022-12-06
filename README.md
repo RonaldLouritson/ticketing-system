@@ -4,9 +4,8 @@ Original tutorial from https://medium.com/@gingerkirsch/basic-web-app-with-djang
 
 Amended ticketing system with Drop and Collect Box with generate TAG number
 
-git clone
-
-create virtual env
+- git clone
+- create virtual env
 
 install requirements.txt
 
