@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %} Ticket #{{ticket.id}} {% endblock %}
+{% block content %}
+	<div class="ticket">
+		<table class="styled-table">
+		<h2> Ticket INT{{ticket.id|stringformat:"07d"}}</h2>
+		<tbody>
+			<tr>
+				<td>Title</td>
+				<td>{{ticket.title}}</td>
+			</tr>
+			<tr>
+				<td>Email</td>
+				<td>{{ticket.requester_email}}</td>
+			</tr>		
+			<tr>
+				<td>Status</td>
+				<td>{{ticket.status}}</td>
+			</tr>	
+			<tr>
+				<td>Description</td>
+				<td>{{ticket.description}}</td>
+			</tr>
+			<tr>
+				<td>Locker</td>
+				<td>{{ticket.locker_num}}</td>
+			</tr>
+			<tr>
+				<td>Created At</td>
+				<td>{{ticket.created_at}}</td>
+			</tr>
+			<tr>
+				<td>Updated At</td>
+				<td>{{ticket.updated_at}}</td>
+			</tr>
+		</tbody>
+		</table>
+	</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %} Tickets {% endblock %}
+{% block content %}
+
+
+<form action="{% url 'save_ticket' %}" method="post">
+	{% csrf_token %}
+	<div class="ticket">
+		<table class="styled-table">
+		<h2> Create New Ticket <input type="submit" value="Save" class="sel header-right"></h2>
+		<tbody>
+			<tr>
+				<td>Title</td>
+				<td>{{ form.title }}</td>
+			</tr>
+			<tr>
+				<td>Email</td>
+				<td>{{ form.requester_email }}</td>
+			</tr>
+			<tr>
+				<td>Status</td>
+				<td>{{ form.status }}</td>
+			</tr>
+			<tr>
+				<td>Description</td>
+				<td>{{ form.description }}</td>
+			</tr>
+			<tr>
+				<td>Locker</td>
+				<td>{{ form.locker_num }}</td>
+			</tr>
+		</tbody>
+		</table>
+	</div>
+	{% comment %} <div class="header-right">
+		<input type="submit" value="Save" class="sel">
+	</div> {% endcomment %}
+</form>
+
+{% endblock %}

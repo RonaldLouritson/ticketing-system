@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% block title %} Ticket #{{ticket.id}} {% endblock %}
+{% block content %}
+{% comment %} <form action="{% url 'update_ticket' ticket_id=ticket.id %} " method="post">
+	{% csrf_token %} {% endcomment %}
+	<div class="ticket">
+		<table class="styled-table">
+		<h2>Ticket INT{{ticket.id|stringformat:"07d"}} <input type='button' onclick="resetTagNum()" value='Reset Tag Number' class="sel header-right"> <input type="button" value="Update" onclick="Update()" class="sel header-right"></h2>
+		<tbody>
+			<tr>
+				<td>Title</td>
+				<td>{{ticket.title}}</td>
+			</tr>
+			<tr>
+				<td>Email</td>
+				<td>{{ticket.requester_email}}</td>
+			</tr>		
+			<tr>
+				<td>Status</td>
+				{% comment %} {% if locker == 'No' %}
+					<td id='statustd' name='status' >{{form_status.status}}</td>
+				{% elif locker == 'Yes' %} {% endcomment %}
+					<td>
+						<select name="status" id="status">
+							{% for i in form_status.status %}
+								<option value="{{i}}"></option>
+							{% endfor %}
+						</select>
+					</td>
+				{% comment %} {% endif %} {% endcomment %}
+			</tr>	
+			<tr>
+				<td>Description</td>
+				<td>{{ticket.description}}</td>
+			</tr>
+			<tr id='tdLocker'>
+				<td>Locker</td>
+				{% if locker == 'No' %}
+					<td id='lockernum' name='lockernum'>{{ticket.locker_num}}</td>
+				{% endif %}				
+			</tr>
+			<tr>
+				<td>Created At</td>
+				<td>{{ticket.created_at}}</td>
+			</tr>
+			<tr>
+				<td>Updated At</td>
+				<td>{{ticket.updated_at}}</td>
+			</tr>
+		</tbody>
+		</table>
+	</div>	
+	{% comment %} <div class="header-right">
+		<input type="submit" value="Update" class="sel">
+	</div> {% endcomment %}
+{% comment %} </form> {% endcomment %}
+{% comment %} <button onclick="resetTagNum()">Reset Tag Number</button> {% endcomment %}
+<script>
+
+	function status(){
+		
+		ticketid = "{{ticket.id}}";
+		status = $("#statustd option:selected").text();
+
+		$.ajax({
+			type: "POST",
+			url: 'ticket_by_id2',
+			data: { ticketId: ticketid,
+			getStatus: status,
+			csrfmiddlewaretoken: "{{csrf_token}}", 
+			},
+			success: function (data) {
+
+				console.log(data)
+
+				$("#lockernum").empty();
+
+				if (data.locker == 'Yes'){
+
+					html = '<td style="table-layout: fixed; height: 30px"><select name="locker" id="locker"></select></td>';
+					$('#lockernum').append(html);
+	
+					$("#locker").append('<option>---------</option>');
+					for (i in data.getlocker) {
+						$("#locker").append('<option>' + data.getlocker[i]['locker_num'] + '</option>');                                                                                                                               
+					}
+
+				} else {
+
+					console.log('test')
+					$('#lockernum').append('None');
+
+				}
+				
+			},
+			error: function (error_response) {
+				console.log("error");
+			},
+		});
+
+
+	}
+
+	function Update(){
+
+		ticketId = "{{ticket.id}}";
+		getStatus = $("#status option:selected").text();
+		getLockerNum = $("#locker option:selected").text();
+
+		Swal.fire({
+			title: 'Are you sure want to Update!',
+			showDenyButton: true,
+			showCancelButton: true,
+			confirmButtonText: 'Yes',
+			denyButtonText: `No`,
+			}).then((result) => {
+			if (result.isConfirmed) {
+
+				location.href = '{% url 'update_ticket'  %}?ticketId='+ticketId+'&getStatus='+getStatus+'&getLockerNum='+getLockerNum;
+
+			} else if (result.isDenied) {
+
+			}
+		});
+
+	}
+
+	$(document).ready( function () {
+		var getStatus = $("#status option:selected").text()
+		
+		if(getStatus == 'Student To Drop' || getStatus == 'Admin To Drop' || getStatus == 'Student To Collect' || getStatus == 'Admin To Collect' || getStatus == 'Completed' || getStatus == 'Voided'){
+			$("#status").prop("disabled", true);
+		} else {
+			$("#status").prop("disabled", false);
+		}
+	  });
+
+	$("#status").change(function () {
+		var getStatus = $("#status option:selected").text()
+		//location.href = '{% url 'ticket_by_id2'  %}?ticketId='+'{{ticket.id}}'+'&getStatus='+getStatus;
+
+		ticketid = "{{ticket.id}}";
+		status = $("#status option:selected").text();
+
+		$.ajax({
+			type: "POST",
+			url: 'ticket_by_id2',
+			data: { ticketId: ticketid,
+			getStatus: status,
+			csrfmiddlewaretoken: "{{csrf_token}}", 
+			},
+			success: function (data) {
+
+				$("#lockernum").empty();
+
+				if (data.locker == 'Yes'){
+
+					html = '<td style="table-layout: fixed; height: 30px"><select name="locker" id="locker"></select></td>';
+					$('#lockernum').append(html);
+	
+					$("#locker").append('<option>---------</option>');
+					for (i in data.getlocker) {
+						$("#locker").append('<option>' + data.getlocker[i]['locker_num'] + '</option>');                                                                                                                               
+					}
+
+				} else {
+
+					$('#lockernum').append('None');
+
+				}
+				
+			},
+			error: function (error_response) {
+				console.log("error");
+			},
+		});
+	});
+
+	function resetTagNum() {
+		//var rsvnum = document.getElementById('srvnum').value;
+		//if (rsvnum) {
+		Swal.fire({
+			title: 'Are you sure want to Reset the Tag Number!',
+			showDenyButton: true,
+			showCancelButton: true,
+			confirmButtonText: 'Reset',
+			denyButtonText: `Don't Reset`,
+			}).then((result) => {
+			if (result.isConfirmed) {
+				location.href = '{% url 'reset_tag_number' %}?ticketId='+"{{ticket.id}}";
+				//Swal.fire('Tag Number Has been Reset', '', 'info')
+			} else if (result.isDenied) {
+				//Swal.fire('Tag Number Not been Reset', '', 'info')
+			}
+		});
+		//} else {
+		//	alert('Oops.!!');
+		//}
+	}
+
+</script> 
+{% endblock %}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Tickets{% endblock %}</title>
+  {% load static %}
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+</head>
+<body>
+  <div class="header">
+    <a href="{% url 'index' %}" class="logo">Ticketing System</a>
+    <div class="header-right">
+      <a href="{% url 'student_drop' %}" class=sel>Student Drop/Collect</a>
+      {% comment %} <a href="{% url '' %}" class=sel>Student Collect</a> {% endcomment %}
+      <a href="{% url 'admin_drop' %}" class=sel>Admin Drop/Collect</a>
+      {% comment %} <a href="{% url '' %}" class=sel>Admin Collect</a> {% endcomment %}
+      <a href="{% url 'index' %}" class=sel>All Tickets</a>
+      <a href="{% url 'pending_ticket' %}" class=sel>Pending Tickets</a>
+      <a href="{% url 'create_ticket' %}" class=sel>Create New Ticket</a>
+      <a href="/admin/" class=sel>Admin Site</a>
+    </div>
+  </div>
+   <div id="body">
+  	{% block content %}{% endblock %}
+  </div>
+  {% load sweetify %}
+  {% sweetify %}
+</body>
+</html>

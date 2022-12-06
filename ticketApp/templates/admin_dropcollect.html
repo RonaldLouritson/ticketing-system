@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %} Tickets {% endblock %}
+{% block content %}
+
+<form action="{% url 'admin_drop_doc' %}" method="post">
+	{% csrf_token %}
+
+		<div class="ticket">
+			<h2>Admin Drop/Collect Document</h2>
+			<input type="number" min="0" class="form-control center-block" name="lockernumber" id="lockernumber" 
+			oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+			style="margin: auto; display: block; width: 200px" maxlength="3" placeholder="Enter Locker Number">
+			<br>
+			<input type="number" min="0" class="form-control center-block" name="tagnumber"  id="tagnumber"
+			oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
+			style="margin: auto; display: block; width: 200px" maxlength="6" placeholder="Enter Tag Number">
+			<br>
+			<div style="margin: auto; display: block; width: 150px">
+				<input class="radio-input" type="radio" id="drop" name="checkradio" value="drop" checked="checked" onclick="btnRadio_Click();">
+				<label class="radio-label" for="drop">Drop</label>
+				&nbsp;&nbsp;&nbsp;
+				<input class="radio-input" type="radio" id="collect" name="checkradio" value="collect" onclick="btnRadio_Click();">
+				<label class="radio-label" for="collect">Collect</label>
+			<div>
+		<br>
+		<br>
+		<div class="">
+			<input type="submit" id="btndrpclc" value="Drop" class="sel center-block" style="margin: auto; display: block;">
+		</div>
+
+</form>
+<script>
+	function btnRadio_Click() {
+
+		var getRadio = $('input[name="checkradio"]:checked').val();
+
+		if (getRadio == 'drop') {
+			document.getElementById('btndrpclc').value = 'Drop';
+		} else {
+			document.getElementById('btndrpclc').value = 'Collect';
+		}
+
+	};                               
+</script>
+{% endblock %}
