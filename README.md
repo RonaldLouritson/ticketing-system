@@ -12,3 +12,5 @@ Amended ticketing system with Drop and Collect Box with generate TAG number
 - python manage.py runserver
 
 superuser username : admin password : admin
+
+pythonanywhere link : http://ticketingsystem.pythonanywhere.com/
