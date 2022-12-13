@@ -1,16 +1,15 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Ticket
-from .forms import *
+import random
 
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-
+import sweetify
 from django.conf import settings
 from django.core.mail import send_mail
-
-import random
-import sweetify
-
 from django.db.models import Q
+from django.http import JsonResponse
+from django.shortcuts import render
+
+from .forms import *
+from .models import Ticket
+
 
 def index(request):
 	tickets = Ticket.objects.order_by('-created_at')[:20]
@@ -33,10 +32,6 @@ def save_ticket(request):
 		getEmail = form.data['requester_email']
 		getLockerId = form.data['locker_num']
 		getEmailName = getEmail.split('@')[0]
-		# data = {
-		# 		'tag_num': tag,
-		# 	}
-		# form = TicketForm(data)
 		if form.is_valid():
 			obj = form.save(commit=False)
 			tag = random.randint(111111, 999999)
@@ -62,17 +57,12 @@ def save_ticket(request):
 
 
 def update_ticket(request):
-
 	ticketId = request.GET.get('ticketId')
-
 	getStatus = request.GET.get('getStatus')
 	getStatus = getStatus.replace(" ", "_")
 	getStatus = getStatus.upper()
-
 	getLockerNum = request.GET.get('getLockerNum')
-
 	getTicket = Ticket.objects.get(pk=ticketId)
-
 
 	if getTicket and getLockerNum == '':
 		if getStatus == 'ADMIN_VERIFYING':
@@ -114,7 +104,6 @@ def update_ticket(request):
 	
 	
 def ticket_by_id(request, ticket_id):
-	print(ticket_id)
 	ticket = Ticket.objects.get(pk=ticket_id)
 	form_status = UpdateStatus(instance=ticket)
 	locker = 'No'
@@ -136,8 +125,6 @@ def ticket_by_id2(request):
 	}
 
 	return JsonResponse(data)
-    
-	#return render(request, 'ticket_by_id.html', {'ticket':ticket, 'form_locker': form_locker, 'locker': locker,})
 
 
 def ticket_by_id_cnt_edit(request, ticket_id):
@@ -163,7 +150,6 @@ def reset_tag_number(request):
 		recipient_list = [getTicket.requester_email, ]
 		send_mail( subject, message, email_from, recipient_list )
 
-	#tickets = Ticket.objects.exclude(Q(status='Completed') | Q(status='Void')).order_by('-created_at')[:20]
 	sweetify.success(request, '', text='Tag Number for Ticket INT' + str(getTicketId).zfill(7) + ' Has been Reset', persistent='')
 	form_status = UpdateStatus(instance=getTicket)
 	return render(request, 'ticket_by_id.html', {'ticket':getTicket, 'form_status': form_status})
@@ -200,7 +186,6 @@ def student_drop_doc(request):
 						send_mail( subject, message, email_from, recipient_list )
 
 						obj.status = TicketStatus.ADMIN_TO_COLLECT
-						#obj.status = 'In Progress - Admin to Collect the Document'
 						obj.save()
 						sweetify.success(request, '', text='Document Droped Successfully', persistent='')
 					elif getRadio == 'collect':
@@ -212,10 +197,8 @@ def student_drop_doc(request):
 						loc_id.save()
 
 						Ticket.objects.filter(id=obj.id).update(locker_num='')
-						#Ticket.objects.filter(locker_num=loc_id, tag_num=getTagNum).update(locker_num='')
 						sweetify.success(request, '', text='Document Collected Successfully', persistent='')
 					
-					#Ticket.objects.filter(locker_num=loc_id, tag_num=getTagNum).update(locker_num='')
 				else:
 					sweetify.warning(request, '', text='Locker and Tag Number not Match', persistent='')
 			else:
@@ -223,9 +206,8 @@ def student_drop_doc(request):
 		else:
 			sweetify.warning(request, '', text='Locker and Tag Number filed cannot be Empty', persistent='')
 
-		#return render(request, 'student_drop.html')
-		tickets = Ticket.objects.exclude(Q(status='Completed') | Q(status='Void')).order_by('-created_at')[:20]
-		return render(request,'ticket_pending.html', {'tickets': tickets})
+	tickets = Ticket.objects.exclude(Q(status='Completed') | Q(status='Void')).order_by('-created_at')[:20]
+	return render(request,'ticket_pending.html', {'tickets': tickets})
 
 
 def admin_drop(request):
@@ -259,7 +241,6 @@ def admin_drop_doc(request):
 						send_mail( subject, message, email_from, recipient_list )
 
 						obj.status = TicketStatus.STUDENT_TO_COLLECT
-						#obj.status = 'In Progress - Student to Collect the Document'
 						obj.save()
 						sweetify.success(request, '', text='Document Droped Successfully', persistent='')
 					elif getRadio == 'collect':
@@ -273,7 +254,6 @@ def admin_drop_doc(request):
 						Ticket.objects.filter(id=obj.id).update(locker_num='')
 						sweetify.success(request, '', text='Document Collected Successfully', persistent='')
 					
-					#Ticket.objects.filter(locker_num=loc_id, tag_num=getTagNum).update(locker_num='')
 				else:
 					sweetify.warning(request, '', text='Locker and Tag Number not Match', persistent='')
 			else:
@@ -281,6 +261,5 @@ def admin_drop_doc(request):
 		else:
 			sweetify.warning(request, '', text='Locker and Tag Number filed cannot be Empty', persistent='')
 
-		#return render(request, 'admin_drop.html')
-		tickets = Ticket.objects.exclude(Q(status='Completed') | Q(status='Void')).order_by('-created_at')[:20]
-		return render(request,'ticket_pending.html', {'tickets': tickets})
+	tickets = Ticket.objects.exclude(Q(status='Completed') | Q(status='Void')).order_by('-created_at')[:20]
+	return render(request,'ticket_pending.html', {'tickets': tickets})

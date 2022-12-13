@@ -24,7 +24,7 @@ INSTALLED_APPS = [
 
 SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
 
-ROOT_URLCONF = 'ticketSys.urls'
+ROOT_URLCONF = 'ticketSite.urls'
 
 TEMPLATES = [
     {
@@ -42,7 +42,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ticketSys.wsgi.application'
+WSGI_APPLICATION = 'ticketSite.wsgi.application'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/

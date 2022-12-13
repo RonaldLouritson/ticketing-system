@@ -11,12 +11,11 @@
 </head>
 <body>
   <div class="header">
+    <img src="{% static 'image/logo.png' %}" height="50px" width="50px">
     <a href="{% url 'index' %}" class="logo">Ticketing System</a>
     <div class="header-right">
       <a href="{% url 'student_drop' %}" class=sel>Student Drop/Collect</a>
-      {% comment %} <a href="{% url '' %}" class=sel>Student Collect</a> {% endcomment %}
       <a href="{% url 'admin_drop' %}" class=sel>Admin Drop/Collect</a>
-      {% comment %} <a href="{% url '' %}" class=sel>Admin Collect</a> {% endcomment %}
       <a href="{% url 'index' %}" class=sel>All Tickets</a>
       <a href="{% url 'pending_ticket' %}" class=sel>Pending Tickets</a>
       <a href="{% url 'create_ticket' %}" class=sel>Create New Ticket</a>
